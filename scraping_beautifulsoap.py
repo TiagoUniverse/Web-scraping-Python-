@@ -17,24 +17,30 @@ if response.status_code == 200:
     products = soup.find_all("span", class_="a-size-base-plus a-color-base a-text-normal")
     prices = soup.find_all("span", class_="a-price-whole")
     prices_fraction = soup.find_all("span", class_="a-price-fraction")
+    juros = soup.find_all("span", class_="a-size-base a-color-secondary")
+    estrelas = soup.find_all("span", class_="a-size-base s-underline-text")
 
     # Cria o arquivo CSV com codificação UTF-8
     file = open('precos_cadeiraEscritorio.csv', 'w', newline='')
 
     writer = csv.writer(file)
-    headers = ['Produto', 'Preço']  # Adicionando uma coluna para "Preço"
+    headers = ['Produto', 'Preço', 'Juros', 'Estrelas']  # Adicionando uma coluna para "Preço"
     writer.writerow(headers)
 
     # Loop pelos elementos e imprimir os títulos e preços
-    for product, price, fraction in zip(products, prices, prices_fraction):
+    for product, price, fraction, juro, estrela in zip(products, prices, prices_fraction, juros, estrelas):
         product_text = product.text.strip()
+        juros_text = juro.text.strip()
         price_text = price.text.strip() + fraction.text.strip()  # Concatena preço e fração
+        estrelas = estrela.text.strip()
 
         print("Produto:", product_text)
         print("Preco:", price_text)
+        print("Juros:", juros_text)
+        print("Estrelas:", estrelas)
 
         # Cada produto e preço
-        row = [product_text, price_text]
+        row = [product_text, price_text, juros_text, estrelas]
 
         # Salva os dados no arquivo CSV
         writer.writerow(row)
